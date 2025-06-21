@@ -1,0 +1,67 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-python
+  namespace: {{ .Values.namespace.name }}
+spec:
+  replicas: {{ .Values.fastapi.deployment.replicas }}
+  selector:
+    matchLabels:
+      app: simple-python
+  template:
+    metadata:
+      labels:
+        app: simple-python
+    spec:
+      containers:
+        - name: simple-python
+          image: {{ .Values.fastapi.image.repository }}:{{ .Values.fastapi.image.tag }}
+          imagePullPolicy: {{ .Values.fastapi.image.pullPolicy }}
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_HOST
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_DATABASE
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_PORT
+            - name: LOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: LOG_FILE
+          ports:
+            - containerPort: {{ .Values.fastapi.service.port }}
+          {{- if .Values.fastapi.deployment.resources }}
+          resources:
+            {{- toYaml .Values.fastapi.deployment.resources | nindent 12 }}
+          {{- end }}
+          {{- if .Values.fastapi.persistence.enabled }}
+          volumeMounts:
+            - name: app-storage
+              mountPath: /app/data
+          {{- end }}
+      {{- if .Values.fastapi.persistence.enabled }}
+      volumes:
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: simple-python-pvc
+      {{- end }} 

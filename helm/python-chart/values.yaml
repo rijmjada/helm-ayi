@@ -1,0 +1,51 @@
+# Default values for python-chart
+# This is a YAML-formatted file.
+
+# FastAPI Configuration
+fastapi:
+  # FastAPI Image
+  image:
+    repository: diegoayi/k8sv2
+    tag: "latest"
+    pullPolicy: IfNotPresent
+  
+  # FastAPI Configuration
+  config:
+    mysqlHost: mysql.mysqlns.svc.cluster.local
+    mysqlUser: root
+    mysqlDatabase: testdb
+    mysqlPort: "3306"
+    logFile: /app/data/accesos.log
+  
+  # FastAPI Secret
+  secret:
+    mysqlPassword: rootpassword
+  
+  # FastAPI Storage
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 1Gi
+    path: /mnt/disks/fastapi
+    reclaimPolicy: Retain
+  
+  # FastAPI Service
+  service:
+    type: NodePort
+    port: 8000
+  
+  # FastAPI Deployment
+  deployment:
+    replicas: 3
+    resources:
+      requests:
+        memory: "128Mi"
+        cpu: "100m"
+      limits:
+        memory: "256Mi"
+        cpu: "200m"
+
+# Namespace
+namespace:
+  name: pythonns
+  create: true 

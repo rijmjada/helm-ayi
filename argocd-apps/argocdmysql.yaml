@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: mysqlns-app
+  namespace: argocd
+spec:
+  project: default
+  source:
+    repoURL: 'https://github.com/rijmjada/helm-ayi/'
+    targetRevision: HEAD
+    path: helm/mysql-chart
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: mysqlns
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true 

@@ -1,0 +1,29 @@
+{{- if .Values.fastapi.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: simple-python-pv
+spec:
+  capacity:
+    storage: {{ .Values.fastapi.persistence.size }}
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: {{ .Values.fastapi.persistence.path }}
+    type: DirectoryOrCreate
+  storageClassName: {{ .Values.fastapi.persistence.storageClass }}
+  persistentVolumeReclaimPolicy: {{ .Values.fastapi.persistence.reclaimPolicy }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: simple-python-pvc
+  namespace: {{ .Values.namespace.name }}
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.fastapi.persistence.size }}
+  volumeName: simple-python-pv
+{{- end }} 

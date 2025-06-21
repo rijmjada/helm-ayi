@@ -1,0 +1,8 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: {{ .Values.namespace.name }}
+data:
+  MYSQL_DATABASE: {{ .Values.mysql.config.database }}
+  MYSQL_PORT: {{ .Values.mysql.config.port | quote }} 

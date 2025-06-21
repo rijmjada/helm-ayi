@@ -1,0 +1,48 @@
+# Default values for mysql-chart
+# This is a YAML-formatted file.
+
+# MySQL Configuration
+mysql:
+  # MySQL Image
+  image:
+    repository: mysql
+    tag: "8"
+    pullPolicy: IfNotPresent
+  
+  # MySQL Configuration
+  config:
+    database: testdb
+    port: "3306"
+  
+  # MySQL Secret
+  secret:
+    rootPassword: rootpassword
+  
+  # MySQL Storage
+  persistence:
+    enabled: true
+    storageClass: standard
+    size: 1Gi
+    path: /mnt/data/mysql
+    reclaimPolicy: Retain
+  
+  # MySQL Service
+  service:
+    type: ClusterIP
+    port: 3306
+  
+  # MySQL StatefulSet
+  statefulset:
+    replicas: 1
+    resources:
+      requests:
+        memory: "256Mi"
+        cpu: "250m"
+      limits:
+        memory: "512Mi"
+        cpu: "500m"
+
+# Namespace
+namespace:
+  name: mysqlns
+  create: true 

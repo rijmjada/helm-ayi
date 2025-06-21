@@ -1,0 +1,29 @@
+{{- if .Values.mysql.persistence.enabled }}
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: mysql-pv
+spec:
+  storageClassName: {{ .Values.mysql.persistence.storageClass }}
+  capacity:
+    storage: {{ .Values.mysql.persistence.size }}
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: {{ .Values.mysql.persistence.reclaimPolicy }}
+  hostPath:
+    path: {{ .Values.mysql.persistence.path }}
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: mysql-pvc
+  namespace: {{ .Values.namespace.name }}
+spec:
+  storageClassName: {{ .Values.mysql.persistence.storageClass }}
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ .Values.mysql.persistence.size }}
+  volumeName: mysql-pv
+{{- end }} 

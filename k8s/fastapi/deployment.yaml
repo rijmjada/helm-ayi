@@ -1,0 +1,58 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: simple-python-app
+  namespace: pythonns
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: simple-python-app
+  template:
+    metadata:
+      labels:
+        app: simple-python-app
+    spec:
+      containers:
+        - name: python-app
+          image: diegoayi/k8sv2
+          ports:
+            - containerPort: 8000
+          env:
+            - name: MYSQL_HOST
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_HOST
+            - name: MYSQL_USER
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_USER
+            - name: MYSQL_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: mysql-secret
+                  key: MYSQL_PASSWORD
+            - name: MYSQL_DATABASE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_DATABASE
+            - name: MYSQL_PORT
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: MYSQL_PORT
+            - name: LOG_FILE
+              valueFrom:
+                configMapKeyRef:
+                  name: app-config
+                  key: LOG_FILE
+          volumeMounts:
+            - name: app-storage
+              mountPath: /app/data
+      volumes:
+        - name: app-storage
+          persistentVolumeClaim:
+            claimName: simple-python-pvc 

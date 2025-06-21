@@ -1,0 +1,9 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: mysql-config
+  namespace: mysqlns
+data:
+  # Configuración de MySQL
+  MYSQL_DATABASE: testdb
+  MYSQL_PORT: "3306" 

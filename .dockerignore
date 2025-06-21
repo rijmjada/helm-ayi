@@ -1,0 +1,18 @@
+# Docker files
+Dockerfile
+.dockerignore
+
+# Git
+.git/
+.gitignore
+
+# Documentation
+README.md
+
+# Python cache and development files
+
+# Kubernetes YAML files
+k8s/
+helm/
+*.yaml
+*.yml 
