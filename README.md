@@ -4,7 +4,7 @@ Este proyecto implementa una aplicación FastAPI con base de datos MySQL, desple
 
 ## 🏗️ Arquitectura
 
-- **Frontend**: FastAPI (Python)
+- **Backend**: FastAPI (Python)
 - **Base de Datos**: MySQL 8
 - **Orquestación**: Kubernetes
 - **Gestión de Configuración**: Helm Charts
